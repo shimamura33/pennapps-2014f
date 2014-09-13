@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <meta charset="utf-8">
+  <title>Map(For Test Only)</title>
+  <style>
+  html, body, #map-canvas {
+    height: 100%;
+    margin: 0px;
+    padding: 0px
+  }
+  </style>
+  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script>
+    var currentLocation = [];
+    navigator.geolocation.getCurrentPosition(function(pos) {
+      currentLocation.push(pos.coords.latitude); 
+      currentLocation.push(pos.coords.longitude); 
+    })
+    var typeOfAssults = 1;
+    var markers = [];
+    var pointsList = [];
+    var map;
+    var markersList = [];
+    var currentType = -1;
+
+    function buttonControl(controlDiv, map, text, cb) {
+
+      controlDiv.style.padding = '5px';
+
+      var controlUI = document.createElement('div');
+      controlUI.style.backgroundColor = 'white';
+      controlUI.style.borderStyle = 'solid';
+      controlUI.style.borderWidth = '2px';
+      controlUI.style.cursor = 'pointer';
+      controlUI.style.textAlign = 'center';
+      controlDiv.appendChild(controlUI);
+
+      var controlText = document.createElement('div');
+      controlText.style.fontFamily = 'Arial,sans-serif';
+      controlText.style.fontSize = '12px';
+      controlText.style.paddingLeft = '4px';
+      controlText.style.paddingRight = '4px';
+      controlText.innerHTML = '<b>' + text + '</b>';
+      controlUI.appendChild(controlText);
+
+      google.maps.event.addDomListener(controlUI, 'click', cb);
+    }  
+
+    function initialize(centerPoint, pointsList, typeOfAssults) { 
+      var latLng = new google.maps.LatLng(centerPoint[0], centerPoint[1]);
+      var mapOptions = {
+        zoom: 16,
+        center: latLng
+      }
+      map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+            for (var i = 0; i < pointsList.length; i++) {
+        var markers = [];
+        for (var index = 0; index < pointsList[i].length; index++) {
+          var tmpLatLng = new google.maps.LatLng(pointsList[i][index][0], pointsList[i][index][1]);
+          var marker = new google.maps.Marker({
+            position: tmpLatLng,
+            map: null
+          });
+          markers.push(marker);   
+        }
+        markersList.push(markers);
+      }
+
+      var oneControlDiv = document.createElement('div');
+      var oneControl = new buttonControl(oneControlDiv, map, 'Verbal', function() {
+        displayAssaults(0);
+      });
+      var twoControlDiv = document.createElement('div');
+      var twoControl = new buttonControl(twoControlDiv, map, 'Non-Verbal', function() {
+        displayAssaults(1);
+      });
+      var threeControlDiv = document.createElement('div');
+      var threeControl = new buttonControl(threeControlDiv, map, 'Physical', function() {
+        displayAssaults(2);
+      });
+      var fourControlDiv = document.createElement('div');
+      var fourControl = new buttonControl(fourControlDiv, map, 'All', function() {
+        displayAssaults(3);
+      });
+
+      oneControlDiv.index = 4;
+      twoControlDiv.index = 3;
+      threeControlDiv.index = 2;
+      fourControlDiv.index = 1;
+
+      map.controls[google.maps.ControlPosition.TOP_RIGHT].push(oneControlDiv);
+      map.controls[google.maps.ControlPosition.TOP_RIGHT].push(twoControlDiv);
+      map.controls[google.maps.ControlPosition.TOP_RIGHT].push(threeControlDiv);
+      map.controls[google.maps.ControlPosition.TOP_RIGHT].push(fourControlDiv);
+
+      // alert(markersList[0].length);
+    }
+
+    function displayAssaults(typeOfAssults) {
+      if (typeOfAssults == currentType) return;
+      if (typeOfAssults == 3) {
+        currentType = 3;
+        for (var i = 0; i < markersList.length; i++) {
+          for (var index = 0; index < markersList[i].length; index++) {
+            markersList[i][index].setMap(map);
+          }
+        }
+      }
+      else {
+        removeMarkers(currentType);
+        currentType = typeOfAssults;
+        for (var index = 0; index < markersList[typeOfAssults].length; index++) {
+          markersList[typeOfAssults][index].setMap(map);
+        }
+      } 
+    }
+
+    function removeMarkers(num) {
+      if (num == -1) return;
+      if (num == 3) {
+        for (var i = 0; i < markersList.length; i++) {
+          for (var j = 0; j < markersList[i].length; j++) {
+            markersList[i][j].setMap(null);
+          }
+        }     
+      }
+      else {
+        for (var index = 0; index < markersList[num].length; index++) {
+          markersList[num][index].setMap(null);
+        }
+      }
+    }
+    google.maps.event.addDomListener(window, 'load', function() {
+      $.get('/assaults', function(data) {
+        for (var i = 0; i < data.length; i++) {
+          var points = [];
+          for (var j = 0; j < data[i].length; j++) {
+            points.push(data[i][j]);
+          }
+          pointsList.push(points);
+        }
+        initialize(currentLocation, pointsList, 0);
+        // alert(currentLocation);
+      });
+    });
+  </script>
+</head>
+<body>
+  <div id="map-canvas"></div>
+</body>
+</html>

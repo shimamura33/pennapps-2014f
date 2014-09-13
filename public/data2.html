@@ -20,10 +20,49 @@
             }
         }
     </script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+
+    <script>
+  $(function(){
+      $("#json-one").change(function() {
+      
+        var $dropdown = $(this);
+      
+        var data = {
+  verbal: "Continuous sexual slurs or innuendoes,Risqué kidding about sex or gender-specific traits,Persistent unsolicited propositions for sexual relations,Other",
+  nonverbal: "Sexual looks and lewd gestures,Touching oneself sexually,Persistent and unwelcome flirting,Displaying sexually suggestive pictures,Stalking,Other",
+  pc: "Unwelcome touching oneself sexually against another person,Attempted or actual kissing or fondling/cornering/mauling,Physical assault,Coerced sexual activity,Attempted rape or rape,Other"
+};
+        
+          var key = $dropdown.val();
+          var vals = [];
+                    
+          switch(key) {
+            case 'pc':
+              vals = data.pc.split(",");
+              break;
+            case 'verbal':
+              vals = data.verbal.split(",");
+              break;
+            case 'nonverbal':
+              vals = data.nonverbal.split(",");
+              break;
+            case 'base':
+              vals = ['Please choose from above'];
+          }
+          
+          var $jsontwo = $("#json-two");
+          $jsontwo.empty();
+          $.each(vals, function(index, value) {
+            $jsontwo.append("<option>" + value + "</option>")});
+        });
+      });
+      </script>
+
 </head>
 <body>
  <header>
-      	<h1><a href="/" id="logo">Woman Assault Reporter</a></h1>
+      	<h1>Woman Assault Reporter</h1>
     </header>
     <form action='/assault/create' method='post'>
 <table style="width:100%">
@@ -35,19 +74,25 @@
 </td></tr>
 
 <tr>
-<td>Assault type</td>
+<td>Assault Type: </td>
 <td>
-<select name="assault_type">
-  <option value="h">sexual harrassment</option>
-  <option value="r">rape</option>
-  <option value="d">sexual discrimination</option>
-</select></td>
+    <select id="json-one" name="assault_type">
+      <option selected value="base">Please Select</option>
+      <option value="verbal">Verbal</option>
+      <option value="nonverbal">Non-verbal</option>
+      <option value="pc">Physical Contact</option>
+    </select>
+    <br />
+    <select id="json-two" name="description">
+      <option>Please choose from above</option>
+    </select>
+</td>
 </tr>
 
 <tr>
-<td>Description of Assault: </td>
+<td>If "Other", describe</td>
 <td>
-<input type="text" name="description" placeholder="Description">
+<input type="text" name="description2" placeholder="Description">
 </td></tr>
 
 <tr>
