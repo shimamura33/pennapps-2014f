@@ -1,3 +1,4 @@
+// Most of this is stolen from Code Weekend demo code
 var express = require('express');
 //var mailer = require('./mailer');
 var ObjectID = require('mongodb').ObjectID;
