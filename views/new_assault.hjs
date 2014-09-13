@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>New assault</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script>
+        function getLocation() {
+            var x = document.getElementById("location");
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position){
+                        x.value = position.coords.latitude + 
+                        "," + position.coords.longitude; 
+                });
+            } else {
+                x.value = "Geolocation is not supported by this browser.";
+            }
+        }
+    </script>
+  </head>
+  <body>
+    <h1>New assault</h1>
+    {{#message}}
+      <h3>{{message}}</h3>
+    {{/message}}
+    <p>Report a new assault:</p>
+    <form action='/assault/create' method='post'>
+      <input type='text' name='assault_type' placeholder='Type'><br/>
+      <input type='text' name='location' id='location' placeholder='Location'> <br/>
+      <textarea name='description' rows='6' cols='50' placeholder='Description'></textarea><br/>
+      <input type='text' name='name' placeholder='Name'> <br/>
+      <input type='checkbox' name='anonymity'>Remain anonymous<br/>
+      <input type='submit' value='Save to Database'>
+    </form>
+    <script>getLocation();</script>
+  </body>
+</html>

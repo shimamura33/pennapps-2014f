@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset= "utf-8">
+
+      <title>Women Assault Report</title>
+      <link rel="stylesheet" href="stylesheets/normalize.css">
+      <link rel="stylesheet" href="stylesheets/main.css">
+   
+    <script>
+        function getLocation() {
+            var x = document.getElementById("location");
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position){
+                        x.value = position.coords.latitude + 
+                        "," + position.coords.longitude; 
+                });
+            } else {
+                x.value = "Geolocation is not supported by this browser.";
+            }
+        }
+    </script>
+</head>
+<body>
+ <header>
+      	<h1><a href="/" id="logo">Woman Assault Reporter</a></h1>
+    </header>
+    <form action='/assault/create' method='post'>
+<table style="width:100%">
+
+<tr>
+<td>Enter your location or log in </td>
+<td>
+<input type="text" name="location" id="location" placeholder="Location">
+</td></tr>
+
+<tr>
+<td>Assault type</td>
+<td>
+<select name="assault_type">
+  <option value="h">sexual harrassment</option>
+  <option value="r">rape</option>
+  <option value="d">sexual discrimination</option>
+</select></td>
+</tr>
+
+<tr>
+<td>Description of Assault: </td>
+<td>
+<input type="text" name="description" placeholder="Description">
+</td></tr>
+
+<tr>
+<td>Attach an image of assailant or assault neighborhood</td>
+<td>
+<input type="submit" value="Attach jpg"></td>
+</tr>
+
+<tr>
+<td>Your Name</td>
+<td>
+<input type="text" name="name" placeholder="Name">
+</td>
+</tr>
+
+<tr><td>Do you want to remain anonymous?</td>
+<td>
+<select name="anonymity">
+  <option value="y">Yes</option>
+  <option value="n">No</option>
+</select></td></tr>
+</table>
+    <script>getLocation();</script>
+
+<input type="submit" value="Submit">
+
+</form>
+
+
+</body>
+</html>
