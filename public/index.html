@@ -3,10 +3,13 @@
 <head>
   <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
   <meta charset="utf-8">
-  <title>Map(Test Only)</title>
+  <title>Women Assault Report</title>
+  <link rel="stylesheet" href="stylesheets/normalize.css">
+  <link rel="stylesheet" href="stylesheets/main.css">
   <style>
     html, body, #map-canvas {
-      height: 100%;
+      height: 80%;
+      width: 99%;
       margin: 0px;
       padding: 0px
     }
@@ -28,7 +31,6 @@
     // var mapList = [];
     for (var index = 0; index < pointsList[0].length; index++) {
       // alert(pointsList[index][1]);
-        console.log(pointsList[index]);
       var tmpLatLng = new google.maps.LatLng(pointsList[0][index][0], pointsList[0][index][1])
       var marker = new google.maps.Marker({
         position: tmpLatLng,
@@ -47,7 +49,26 @@
   </script>
 </head>
 <body>
-    <h2> Map </h2>
-  <div id="map-canvas"></div>
+      <header>
+      	<h1 id="logo">Woman Assault Reporter</h1>
+  
+        <nav>
+          <div id="menu"><center>
+          <ul>
+            <li><a href="/data2.html">Report</a></li> 
+          </ul></center>
+        </div>
+
+        </nav>
+      </header>
+      <div id="wrapper">
+          <h3> See assaults on the map: </h3>
+      </div>
+      <div id="map-canvas"></div>
+      <footer>
+        <a href="http://twitter.com"><img src="img/twitter-wrap.png" alt="Twitter Logo"></a>
+        <a href="http://facebook.com"><img src="img/facebook-wrap.png" alt="Facebook Logo"></a>
+      	<p>&copy; 2014 blahblah.</p>
+      </footer>
 </body>
 </html>

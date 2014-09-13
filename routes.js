@@ -1,6 +1,5 @@
 // Most of this is stolen from Code Weekend demo code
 var express = require('express');
-//var mailer = require('./mailer');
 var ObjectID = require('mongodb').ObjectID;
 var router = express.Router();
 
@@ -34,23 +33,29 @@ router.get('/new', function(req, res) {
 
 router.get('/assaults', function(req, res) {
     req.db.collection('assaults').find().toArray(function(err, assaults) {
-        res.send(assaults.map(function (assault) {
-            return assault.location.coordinates;
-        }));
+        var as = assaults.map(function (assault) {
+            var coord = assault.location.coordinates;
+            return [coord[0], coord[1], assault.assault_type];
+        });
+        var hs = as.filter(function(a) {return a[2] === 'h';});
+        var rs = as.filter(function(a) {return a[2] === 'r';});
+        var ds = as.filter(function(a) {return a[2] === 'd';});
+
+        res.send([hs, rs, ds]);
     });
 });
 
+// db.assaults.find( { location: { $near : { $geometry : { type: 'Point', coordinates: [ 40.0, -75.2 ] }, $maxDistance: 2000 } } })
+// Find assaults in the given radius from a given point
+
 router.post('/assault/create', function(req, res) {
-//  if (!(req.body.title && req.body.body)) {
-//    req.session.message = 'You must provide a title and a body!';
-//    return res.redirect('/');
-//  }
   var loc = req.body.location.split(',');
   var point = {
       type: 'Point',
       coordinates: [ Number(loc[0]), Number(loc[1]) ]
   };
-  console.log(point);
+
+  console.log(req.body);
 
   req.db.collection('assaults').insert({
       location: point,
@@ -58,37 +63,11 @@ router.post('/assault/create', function(req, res) {
       description: req.body.description,
       name: req.body.name,
       date: Date.now(),
-      anonymity: req.body.anonymity === "on"
+      anonymity: req.body.anonymity === "y"
   }, function(err, result) {
       req.session.message = 'Assault saved to db!';
       return res.redirect('/');
   });
 });
-
-//router.post('/email', function(req, res, next) {
-//  if (!(req.body.email && req.body.note)) {
-//    req.session.message = 'You must provide an email address!';
-//    res.redirect('/');
-//  }
-//  console.log(req.body.note);
-//
-//  req.db.collection('notes').findOne({_id: ObjectID(req.body.note)}, function(err, note) {
-//      var mailOptions = {
-//          from: 'Code Weekend <codeweekenddemo@gmail.com>',
-//          to: req.body.email,
-//          subject: note.title,
-//          text: note.body
-//      };
-//
-//      mailer.sendMail(mailOptions, function(err, info) {
-//          if (err) {
-//              next(err);
-//          } else {
-//              req.session.message = 'Message sent successfully!';
-//              res.redirect('/' + req.body.note);
-//          }
-//      });
-//  });
-//});
 
 module.exports = router;
