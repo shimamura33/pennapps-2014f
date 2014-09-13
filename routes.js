@@ -28,15 +28,19 @@ router.get('/foo/:id', function(req, res) {
   });
 });
 
-router.post('/create', function(req, res) {
+router.post('/assault/create', function(req, res) {
 //  if (!(req.body.title && req.body.body)) {
 //    req.session.message = 'You must provide a title and a body!';
 //    return res.redirect('/');
 //  }
 
   req.db.collection('assaults').insert({
-      title: req.body.title,
-      body: req.body.body
+      location: req.body.location,
+      assault_type: req.body.assault_type,
+      description: req.body.description,
+      name: req.body.name,
+      date: req.body.date,
+      anonymity: req.body.anonymity
   }, function(err, result) {
       req.session.message = 'Assault saved to db!';
       return res.redirect('/');
