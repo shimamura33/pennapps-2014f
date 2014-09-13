@@ -3,34 +3,6 @@ var express = require('express');
 var ObjectID = require('mongodb').ObjectID;
 var router = express.Router();
 
-router.get('/', function(req, res) {
-    req.db.collection('assaults').find().toArray(function(err, notes) {
-        return res.render('index', {
-            title: 'Assault watch'
-        });
-    });
-});
-
-router.get('/dbtest', function(req, res) {
-    req.db.collection('assaults').find().toArray(function(err, notes) {
-        return res.send(notes);
-    });
-});
-
-router.get('/foo/:id', function(req, res) {
-  var noteId = req.params.id;
-
-  req.db.collection('notes').findOne({_id: ObjectID(noteId)}, function(err, note) {
-      return res.render('note', {
-          note: note
-      });
-  });
-});
-
-router.get('/new', function(req, res) {
-    res.render('new_assault', {});
-});
-
 router.get('/assaults', function(req, res) {
     req.db.collection('assaults').find().toArray(function(err, assaults) {
         var as = assaults.map(function (assault) {

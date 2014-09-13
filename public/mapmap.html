@@ -27,7 +27,6 @@
 
     // var mapList = [];
     for (var index = 0; index < pointsList[0].length; index++) {
-      // alert(pointsList[index][1]);
         console.log(pointsList[index]);
       var tmpLatLng = new google.maps.LatLng(pointsList[0][index][0], pointsList[0][index][1])
       var marker = new google.maps.Marker({
@@ -37,11 +36,9 @@
     }
   }
   google.maps.event.addDomListener(window, 'load', function() {
-    var text ='';
     $.get("/assaults", function(data) {
       initialize([39.95, -75.2], data);
     });
-    // alert(text);
   });
 
   </script>
