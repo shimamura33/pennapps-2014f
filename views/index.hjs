@@ -6,18 +6,12 @@
   </head>
   <body>
     <h1>{{ title }}</h1>
+    <a href='/new'>Report an assault</a>
     {{#message}}
       <h3>{{message}}</h3>
     {{/message}}
-    <p>Welcome to {{ title }}.</p>
     <ul>
         <li> foo </li>
     </ul>
-    <p>Make a new note:</p>
-    <form action='/create' method='post'>
-      <input type='text' name='title' placeholder='Title'><br/>
-      <textarea name='body' rows='8' cols='80' placeholder='Body'></textarea><br/>
-      <input type='submit' value='Save Note'>
-    </form>
   </body>
 </html>
