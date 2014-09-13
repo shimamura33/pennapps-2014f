@@ -7,7 +7,7 @@ var router = express.Router();
 router.get('/', function(req, res) {
     req.db.collection('assaults').find().toArray(function(err, notes) {
         return res.render('index', {
-            title: 'List of assaults'
+            title: 'Assault watch'
         });
     });
 });
@@ -28,19 +28,37 @@ router.get('/foo/:id', function(req, res) {
   });
 });
 
+router.get('/new', function(req, res) {
+    res.render('new_assault', {});
+});
+
+router.get('/assaults', function(req, res) {
+    req.db.collection('assaults').find().toArray(function(err, assaults) {
+        res.send(assaults.map(function (assault) {
+            return assault.location.coordinates;
+        }));
+    });
+});
+
 router.post('/assault/create', function(req, res) {
 //  if (!(req.body.title && req.body.body)) {
 //    req.session.message = 'You must provide a title and a body!';
 //    return res.redirect('/');
 //  }
+  var loc = req.body.location.split(',');
+  var point = {
+      type: 'Point',
+      coordinates: [ Number(loc[0]), Number(loc[1]) ]
+  };
+  console.log(point);
 
   req.db.collection('assaults').insert({
-      location: req.body.location,
+      location: point,
       assault_type: req.body.assault_type,
       description: req.body.description,
       name: req.body.name,
-      date: req.body.date,
-      anonymity: req.body.anonymity
+      date: Date.now(),
+      anonymity: req.body.anonymity === "on"
   }, function(err, result) {
       req.session.message = 'Assault saved to db!';
       return res.redirect('/');
