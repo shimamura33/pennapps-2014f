@@ -1,4 +1,4 @@
-// Most of this is stolen from Code Weekend demo code
+// Code Weekend demo code
 var path = require('path');
 var express = require('express');
 var cookieParser = require('cookie-parser');
